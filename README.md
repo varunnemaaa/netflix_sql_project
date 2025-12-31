@@ -1,4 +1,5 @@
-Netflix Data Analysis using SQL
+                                                                                              Netflix Data Analysis using SQL
+
 📌 Overview
 
 This project involves a comprehensive analysis of Netflix Movies and TV Shows using SQL. The goal is to extract meaningful insights and answer real-world business questions from the Netflix dataset.
@@ -61,8 +62,9 @@ description TEXT
 
 
 🧪 Business Problems Solved
-'''sql
-✅ 1. Count the Number of Movies vs TV Shows
+```sql
+---✅ 1. Count the Number of Movies vs TV Shows
+
 
 SELECT 
     type,
@@ -70,7 +72,9 @@ SELECT
 FROM netflix
 GROUP BY type;
 
-✅ 2. Find the Most Common Rating for Movies and TV Shows
+
+---✅ 2. Find the Most Common Rating for Movies and TV Shows
+
 WITH rating_counts AS (
     SELECT 
         type,
@@ -92,13 +96,17 @@ SELECT
 FROM ranked_ratings
 WHERE rnk = 1;
 
-✅ 3. List All Movies Released in 2020
+---✅ 3. List All Movies Released in 2020
+
+
 SELECT title, release_year
 FROM netflix
 WHERE type = 'Movie'
   AND release_year = 2020;
 
-✅ 4. Top 5 Countries with the Most Content
+---✅ 4. Top 5 Countries with the Most Content
+
+
 SELECT 
     country,
     COUNT(*) AS total_content
@@ -108,7 +116,7 @@ GROUP BY country
 ORDER BY total_content DESC
 LIMIT 5;
 
-✅ 5. Identify the Longest Movie
+---✅ 5. Identify the Longest Movie
 SELECT 
     title,
     duration
@@ -117,7 +125,7 @@ WHERE type = 'Movie'
 ORDER BY CAST(SPLIT_PART(duration, ' ', 1) AS INT) DESC
 LIMIT 1;
 
-✅ 6. Find Content Added in the Last 5 Years
+---✅ 6. Find Content Added in the Last 5 Years
 SELECT 
     title,
     type,
@@ -126,6 +134,8 @@ FROM netflix
 WHERE date_added >= CURRENT_DATE - INTERVAL '5 years';
 
 ✅ 7. Find All Content by Director "Rajiv Chilaka"
+
+
 SELECT 
     title,
     type,
@@ -134,6 +144,8 @@ FROM netflix
 WHERE director ILIKE '%Rajiv Chilaka%';
 
 ✅ 8. List All TV Shows with More Than 5 Seasons
+
+
 SELECT 
     title,
     duration
@@ -142,6 +154,8 @@ WHERE type = 'TV Show'
   AND CAST(SPLIT_PART(duration, ' ', 1) AS INT) > 5;
 
 ✅ 9. Count the Number of Content Items in Each Genre
+
+
 SELECT 
     TRIM(genre) AS genre,
     COUNT(*) AS total_content
@@ -151,6 +165,8 @@ GROUP BY genre
 ORDER BY total_content DESC;
 
 ✅ 10. Average Number of Content Releases per Year in India
+
+
 WITH india_yearly_content AS (
     SELECT 
         release_year,
@@ -167,12 +183,17 @@ FROM india_yearly_content
 ORDER BY release_year;
 
 ✅ 11. List All Documentary Movies
+
+
+
 SELECT 
     title
 FROM netflix
 WHERE listed_in ILIKE '%Documentaries%';
 
 ✅ 12. Find All Content Without a Director
+
+
 SELECT 
     title,
     type
@@ -180,6 +201,8 @@ FROM netflix
 WHERE director IS NULL;
 
 ✅ 13. Movies Featuring Salman Khan in the Last 10 Years
+
+
 SELECT 
     title,
     release_year
@@ -188,144 +211,9 @@ WHERE caste ILIKE '%Salman Khan%'
   AND release_year >= EXTRACT(YEAR FROM CURRENT_DATE) - 10;
 
 ✅ 14. Categorize Content Based on Violence Keywords
-SELECT 
-    category,
-    COUNT(*) AS content_count
-FROM (
-    SELECT 
-        CASE 
-            WHEN description ILIKE '%kill%' 
-              OR description ILIKE '%violence%' 
-            THEN 'Bad'
-            ELSE 'Good'
-        END AS category
-    FROM netflix
-) sub
-GROUP BY category;✅ 1. Count the Number of Movies vs TV Shows
-SELECT 
-    type,
-    COUNT(*) AS total_content
-FROM netflix
-GROUP BY type;
 
-✅ 2. Find the Most Common Rating for Movies and TV Shows
-WITH rating_counts AS (
-    SELECT 
-        type,
-        rating,
-        COUNT(*) AS rating_count
-    FROM netflix
-    GROUP BY type, rating
-),
-ranked_ratings AS (
-    SELECT 
-        type,
-        rating,
-        RANK() OVER (PARTITION BY type ORDER BY rating_count DESC) AS rnk
-    FROM rating_counts
-)
-SELECT 
-    type,
-    rating AS most_frequent_rating
-FROM ranked_ratings
-WHERE rnk = 1;
 
-✅ 3. List All Movies Released in 2020
-SELECT title, release_year
-FROM netflix
-WHERE type = 'Movie'
-  AND release_year = 2020;
 
-✅ 4. Top 5 Countries with the Most Content
-SELECT 
-    country,
-    COUNT(*) AS total_content
-FROM netflix
-WHERE country IS NOT NULL
-GROUP BY country
-ORDER BY total_content DESC
-LIMIT 5;
-
-✅ 5. Identify the Longest Movie
-SELECT 
-    title,
-    duration
-FROM netflix
-WHERE type = 'Movie'
-ORDER BY CAST(SPLIT_PART(duration, ' ', 1) AS INT) DESC
-LIMIT 1;
-
-✅ 6. Find Content Added in the Last 5 Years
-SELECT 
-    title,
-    type,
-    date_added
-FROM netflix
-WHERE date_added >= CURRENT_DATE - INTERVAL '5 years';
-
-✅ 7. Find All Content by Director "Rajiv Chilaka"
-SELECT 
-    title,
-    type,
-    release_year
-FROM netflix
-WHERE director ILIKE '%Rajiv Chilaka%';
-
-✅ 8. List All TV Shows with More Than 5 Seasons
-SELECT 
-    title,
-    duration
-FROM netflix
-WHERE type = 'TV Show'
-  AND CAST(SPLIT_PART(duration, ' ', 1) AS INT) > 5;
-
-✅ 9. Count the Number of Content Items in Each Genre
-SELECT 
-    TRIM(genre) AS genre,
-    COUNT(*) AS total_content
-FROM netflix,
-     UNNEST(STRING_TO_ARRAY(listed_in, ',')) AS genre
-GROUP BY genre
-ORDER BY total_content DESC;
-
-✅ 10. Average Number of Content Releases per Year in India
-WITH india_yearly_content AS (
-    SELECT 
-        release_year,
-        COUNT(*) AS yearly_count
-    FROM netflix
-    WHERE country ILIKE '%India%'
-    GROUP BY release_year
-)
-SELECT 
-    release_year,
-    yearly_count,
-    AVG(yearly_count) OVER () AS avg_yearly_releases
-FROM india_yearly_content
-ORDER BY release_year;
-
-✅ 11. List All Documentary Movies
-SELECT 
-    title
-FROM netflix
-WHERE listed_in ILIKE '%Documentaries%';
-
-✅ 12. Find All Content Without a Director
-SELECT 
-    title,
-    type
-FROM netflix
-WHERE director IS NULL;
-
-✅ 13. Movies Featuring Salman Khan in the Last 10 Years
-SELECT 
-    title,
-    release_year
-FROM netflix
-WHERE caste ILIKE '%Salman Khan%'
-  AND release_year >= EXTRACT(YEAR FROM CURRENT_DATE) - 10;
-
-✅ 14. Categorize Content Based on Violence Keywords
 SELECT 
     category,
     COUNT(*) AS content_count
@@ -340,7 +228,7 @@ FROM (
     FROM netflix
 ) sub
 GROUP BY category;
-
+```
 
 💼 Skills Demonstrated
 
