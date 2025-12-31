@@ -33,6 +33,7 @@ Genre and keyword analysis reveal content patterns
 
 
 
+
 📂 Dataset Description
 
 Dataset Name: netflix_titles.csv
@@ -40,6 +41,7 @@ Dataset Name: netflix_titles.csv
 The dataset contains metadata about Netflix content.
 
 🧾 Table Schema
+'''sql
 
 CREATE TABLE netflix (
 show_id VARCHAR(20),
@@ -59,8 +61,9 @@ description TEXT
 
 
 🧪 Business Problems Solved
-
+'''sql
 ✅ 1. Count the Number of Movies vs TV Shows
+
 SELECT 
     type,
     COUNT(*) AS total_content
