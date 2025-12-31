@@ -1,4 +1,4 @@
-                                                                                              Netflix Data Analysis using SQL
+     Netflix Data Analysis using SQL
 
 📌 Overview
 
